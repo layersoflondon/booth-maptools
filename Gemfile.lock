@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     layers_of_london-booth-map_tool (0.1.0)
+      pundit (~> 2.0)
       rails (~> 5.2)
 
 GEM
@@ -72,6 +73,8 @@ GEM
     nio4r (2.4.0)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
+    pundit (2.0.1)
+      activesupport (>= 3.0.0)
     rack (2.0.7)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
