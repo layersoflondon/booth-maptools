@@ -12,22 +12,32 @@ module LayersOfLondon::Booth::MapTool
       render json: feature
     end
 
+    def show
+      poly = LayersOfLondon::Booth::MapTool::Polygon.find(params[:id])
+      authorize poly
+
+      user_can_edit = LayersOfLondon::Booth::MapTool::PolygonPolicy.new(current_user, poly).update?
+      render json: poly.to_json(user_can_edit: user_can_edit)
+    end
+
     def create
       square = LayersOfLondon::Booth::MapTool::Square.find(params[:square_id]) rescue LayersOfLondon::Booth::MapTool::Square.create
-      poly = square.polygons.create(feature: polygon_params)
+      poly = square.polygons.create(user: current_user, feature: polygon_params)
+      authorize poly
 
-      render json: poly.to_json
+      render json: poly.to_json(user_can_edit: true)
     end
 
     def update
       poly = LayersOfLondon::Booth::MapTool::Polygon.find(params[:id])
+      authorize poly
 
       return render json: {data: "Error"}, status: :unprocessable_entity unless poly
 
       poly.assign_attributes(feature: polygon_params)
 
       if poly.save
-        render json: poly.to_json
+        render json: poly.to_json(user_can_edit: true)
       else
         render json: {data: "Error"}, status: :unprocessable_entity
       end
@@ -35,6 +45,7 @@ module LayersOfLondon::Booth::MapTool
 
     def destroy
       poly = LayersOfLondon::Booth::MapTool::Polygon.find(params[:id])
+      authorize poly
 
       return render json: {data: "Error"}, status: :unprocessable_entity unless poly
 

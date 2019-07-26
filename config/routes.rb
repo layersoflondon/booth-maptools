@@ -6,7 +6,7 @@ LayersOfLondon::Booth::MapTool::Engine.routes.draw do
           get :polygons
         end
 
-        resources :polygons, except: [:new, :show]
+        resources :polygons, except: [:new]
       end
     end
   end
