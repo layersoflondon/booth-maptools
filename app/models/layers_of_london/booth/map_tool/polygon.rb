@@ -7,7 +7,9 @@ module LayersOfLondon::Booth::MapTool
 
     def to_json(user_can_edit: false)
       feature.inject({}) do |hash, (k,v)|
-        v.merge!({'id' => id, 'userCanEdit': user_can_edit}) if k === 'properties'
+        if k === 'properties'
+          v.merge!({'id' => id, 'userCanEdit': user_can_edit, square: square.try(:to_json)})
+        end
 
         hash[k] = v
         hash
