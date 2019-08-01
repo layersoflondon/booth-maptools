@@ -2,12 +2,15 @@ PATH
   remote: .
   specs:
     layers_of_london-booth-map_tool (0.1.0)
+      aasm (~> 5.0)
       pundit (~> 2.0)
       rails (~> 5.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (5.0.5)
+      concurrent-ruby (~> 1.0)
     actioncable (5.2.3)
       actionpack (= 5.2.3)
       nio4r (~> 2.0)

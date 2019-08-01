@@ -23,9 +23,22 @@ module LayersOfLondon::Booth::MapTool
       render json: feature_collection
     end
 
+    def update
+      square = LayersOfLondon::Booth::MapTool::Square.find(params[:id])
+      proposed_state = params[:state]
+
+      if square.send("may_mark_as_#{proposed_state}?")
+        square.send("mark_as_#{proposed_state}!")
+
+        render json: square.to_json
+      else
+        render json: {}, status: :unprocessable_entity
+      end
+    end
+
     def show
       square = LayersOfLondon::Booth::MapTool::Square.find(params[:id]) rescue LayersOfLondon::Booth::MapTool::Square.create
-      render json: square
+      render json: square.to_json
     end
   end
 end

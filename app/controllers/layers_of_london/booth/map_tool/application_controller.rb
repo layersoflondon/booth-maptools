@@ -18,6 +18,8 @@ module LayersOfLondon
         # end
 
         def session
+          return render json: {} unless current_user.present?
+
           render json: {
             id: current_user.id,
             email: current_user.email,
