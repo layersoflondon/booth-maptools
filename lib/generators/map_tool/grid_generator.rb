@@ -11,16 +11,19 @@ module MapTool
       squares_x = (north_west.distance_to(north_east, units: :meters) / config.square_size).ceil
       squares_y = (north_west.distance_to(south_west, units: :meters) / config.square_size).ceil
 
+      row_north_west = north_west
+      square_north_west = north_west
       squares_y.times do |row|
-        # get the lat/lng for the northwest corner of this row by heading south (180º) from the northwest point by the number of rows * the size of the squares
-        row_north_west = north_west.endpoint(180,(row +1 )*config.square_size, units: :meters)
         puts "Creating row #{row}"
+          square_north_west = row_north_west
         squares_x.times do |col|
           puts "\tCreating column #{col}"
-          # get the square's northwest corner by moving east (90º) by the number of columns from the row's northwest
-          square_north_west = row_north_west.endpoint(90,col*config.square_size, units: :meters)
           LayersOfLondon::Booth::MapTool::Square.create(north_west_lat: square_north_west.lat, north_west_lng: square_north_west.lng)
+          # get the next square's northwest corner by moving east (90º) by the number of columns from the row's northwest
+          square_north_west = square_north_west.endpoint(90, config.square_size + 3, units: :meters)
         end
+        # increment row_north_west by square_size, southwards, ready for the next iteration
+        row_north_west = row_north_west.endpoint(180, config.square_size + 3, units: :meters)
       end
 
     end
