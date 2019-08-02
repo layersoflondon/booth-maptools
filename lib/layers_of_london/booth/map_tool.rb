@@ -1,3 +1,5 @@
+require 'geokit'
+
 require "layers_of_london/booth/map_tool/engine"
 
 module LayersOfLondon
@@ -13,7 +15,7 @@ module LayersOfLondon
       end
 
       class Configuration
-        attr_accessor :square_size
+        attr_accessor :square_size, :north_west_extent, :south_east_extent
       end
     end
   end

@@ -1,6 +1,22 @@
 module LayersOfLondon::Booth::MapTool
   class Square < ApplicationRecord
-    has_many :polygons
+    has_many :polygons, dependent: :destroy
+
+
+
+    validates_presence_of :north_west_lat, :north_west_lng, :south_east_lat, :south_east_lng, :square_size
+
+    before_validation on: :create do
+      self.north_west_lat = self.north_west_lat.round(5)
+      self.north_west_lng = self.north_west_lng.round(5)
+      self.square_size = LayersOfLondon::Booth::MapTool.configuration.square_size
+      self.south_east_lat = south_east.lat
+      self.south_east_lng = south_east.lng
+    end
+
+    after_save :generate_geojson
+
+    serialize :geojson, JSON
 
     include AASM
     aasm do
@@ -28,6 +44,51 @@ module LayersOfLondon::Booth::MapTool
 
     def to_json
       {id: id, state: {label: aasm_state, description: aasm_state.humanize}}
+    end
+
+    def to_geojson
+      {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: [
+            [
+              north_west.to_a.collect {|coord| coord.round(5)}.reverse,
+              south_west.to_a.collect {|coord| coord.round(5)}.reverse,
+              south_east.to_a.collect {|coord| coord.round(5)}.reverse,
+              north_east.to_a.collect {|coord| coord.round(5)}.reverse,
+              north_west.to_a.collect {|coord| coord.round(5)}.reverse
+            ]
+          ]
+        },
+        properties: {
+          id: id,
+          state: aasm_state
+        }
+      }
+    end
+
+    def north_west
+      Geokit::LatLng.new(north_west_lat, north_west_lng)
+    end
+
+    def north_east
+      north_west.endpoint(90, square_size, units: :meters)
+    end
+
+    def south_west
+      north_west.endpoint(180, square_size, units: :meters)
+    end
+
+    def south_east
+      south_west.endpoint(90, square_size, units: :meters)
+    end
+
+    private
+    def generate_geojson
+      unless self.geojson.present?
+        update_attribute(:geojson, to_geojson)
+      end
     end
   end
 end

@@ -6,7 +6,10 @@ module LayersOfLondon::Booth::MapTool
 
     def index
       squares = LayersOfLondon::Booth::MapTool::Square.all
-      render json: squares
+      render json: {
+        type: "FeatureCollection",
+        features: squares.collect(&:geojson)
+      }
     end
 
     def polygons

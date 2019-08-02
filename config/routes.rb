@@ -1,5 +1,5 @@
 LayersOfLondon::Booth::MapTool::Engine.routes.draw do
-  namespace :booth do
+  scope '/booth' do
     get 'session', to: '/layers_of_london/booth/map_tool/application#session'
     resource :maptools, only: [:show] do
 
