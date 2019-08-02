@@ -8,7 +8,7 @@ module LayersOfLondon::Booth::MapTool
       squares = LayersOfLondon::Booth::MapTool::Square.all
       render json: {
         type: "FeatureCollection",
-        features: squares.collect(&:geojson)
+        features: squares.collect(&:to_geojson)
       }
     end
 
