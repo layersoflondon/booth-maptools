@@ -7,8 +7,8 @@ module LayersOfLondon::Booth::MapTool
     validates_presence_of :north_west_lat, :north_west_lng, :south_east_lat, :south_east_lng, :square_size
 
     before_validation on: :create do
-      self.north_west_lat = self.north_west_lat.round(5)
-      self.north_west_lng = self.north_west_lng.round(5)
+      self.north_west_lat = self.north_west_lat
+      self.north_west_lng = self.north_west_lng
       self.square_size = LayersOfLondon::Booth::MapTool.configuration.square_size
       self.south_east_lat = south_east.lat
       self.south_east_lng = south_east.lng
@@ -52,11 +52,11 @@ module LayersOfLondon::Booth::MapTool
           type: "Polygon",
           coordinates: [
             [
-              north_west.to_a.collect {|coord| coord.round(5)}.reverse,
-              south_west.to_a.collect {|coord| coord.round(5)}.reverse,
-              south_east.to_a.collect {|coord| coord.round(5)}.reverse,
-              north_east.to_a.collect {|coord| coord.round(5)}.reverse,
-              north_west.to_a.collect {|coord| coord.round(5)}.reverse
+              north_west.to_a.reverse,
+              south_west.to_a.reverse,
+              south_east.to_a.reverse,
+              north_east.to_a.reverse,
+              north_west.to_a.reverse
             ]
           ]
         },
