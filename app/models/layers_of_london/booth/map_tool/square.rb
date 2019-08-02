@@ -12,9 +12,8 @@ module LayersOfLondon::Booth::MapTool
       self.square_size = LayersOfLondon::Booth::MapTool.configuration.square_size
       self.south_east_lat = south_east.lat
       self.south_east_lng = south_east.lng
+      self.geojson = self.to_geojson
     end
-
-    after_save :generate_geojson
 
     serialize :geojson, JSON
 
@@ -88,10 +87,6 @@ module LayersOfLondon::Booth::MapTool
     def centroid
       north_west.midpoint_to(south_east)
     end
-
-    private
-    def generate_geojson
-      update_attribute(:geojson, to_geojson)
-    end
+    
   end
 end
