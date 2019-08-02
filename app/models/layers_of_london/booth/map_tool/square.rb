@@ -63,7 +63,8 @@ module LayersOfLondon::Booth::MapTool
         },
         properties: {
           id: id,
-          state: aasm_state
+          state: aasm_state,
+          centroid: centroid.to_a.collect {|coord| coord.round(5)}
         }
       }
     end
@@ -84,11 +85,13 @@ module LayersOfLondon::Booth::MapTool
       south_west.endpoint(90, square_size, units: :meters)
     end
 
+    def centroid
+      north_west.midpoint_to(south_east)
+    end
+
     private
     def generate_geojson
-      unless self.geojson.present?
-        update_attribute(:geojson, to_geojson)
-      end
+      update_attribute(:geojson, to_geojson)
     end
   end
 end
