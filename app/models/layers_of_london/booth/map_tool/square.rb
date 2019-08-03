@@ -41,6 +41,29 @@ module LayersOfLondon::Booth::MapTool
       end
     end
 
+    def self.grid_coordinates
+      config = LayersOfLondon::Booth::MapTool.configuration
+      down = (config.squares_x + 1).times.collect do |col|
+        top = config.north_west.endpoint(90,col*config.square_size, units: :meters)
+        bottom = top.endpoint(180, config.squares_y*config.square_size, units: :meters)
+        [
+          top.to_a.reverse,
+          bottom.to_a.reverse
+        ]
+      end
+
+      across = (config.squares_y + 1).times.collect do |col|
+        left = config.north_west.endpoint(180,col*config.square_size, units: :meters)
+        right = left.endpoint(90, config.squares_x*config.square_size, units: :meters)
+        [
+          left.to_a.reverse,
+          right.to_a.reverse
+        ]
+      end
+
+      down + across
+    end
+
     def to_json
       {id: id, state: {label: aasm_state, description: aasm_state.humanize}}
     end

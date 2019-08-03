@@ -6,6 +6,8 @@ LayersOfLondon::Booth::MapTool::Engine.routes.draw do
       resources :squares, only: [:index, :show, :update] do
         collection do
           get :polygons
+          get :grid
+          get :coordinates
         end
 
         resources :polygons, except: [:new]

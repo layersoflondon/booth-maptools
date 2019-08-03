@@ -5,11 +5,39 @@ module LayersOfLondon::Booth::MapTool
     skip_after_action :verify_authorized rescue nil
 
     def index
-      squares = LayersOfLondon::Booth::MapTool::Square.all
+      squares = LayersOfLondon::Booth::MapTool::Square.where.not(aasm_state: :not_started)
       render json: {
         type: "FeatureCollection",
         features: squares.collect(&:to_geojson)
       }
+    end
+
+    def grid
+      render json: {
+        type: "FeatureCollection",
+        features: Square.grid_coordinates.collect do |coords|
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: coords
+            },
+            properties: {}
+          }
+        end
+      }
+    end
+
+    def coordinates
+      squares = LayersOfLondon::Booth::MapTool::Square.all
+      square_data = squares.inject({}) do |hash, square|
+        hash[square.id] = [
+          square.north_west.to_a,
+          square.south_east.to_a
+        ]
+        hash
+      end
+      render json: square_data
     end
 
     def polygons
