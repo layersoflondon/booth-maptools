@@ -126,6 +126,10 @@ module LayersOfLondon::Booth::MapTool
     def centroid
       north_west.midpoint_to(south_east)
     end
-    
+
+    def editable?
+      !aasm_state.in?(["done", "flagged"])
+    end
+
   end
 end
