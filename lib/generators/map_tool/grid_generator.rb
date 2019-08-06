@@ -14,9 +14,9 @@ module MapTool
           square_north_west = row_north_west
         squares_x.times do |col|
           puts "\tCreating column #{col}"
-          LayersOfLondon::Booth::MapTool::Square.create(north_west_lat: square_north_west.lat, north_west_lng: square_north_west.lng)
+          square = LayersOfLondon::Booth::MapTool::Square.create(north_west_lat: square_north_west.lat, north_west_lng: square_north_west.lng)
           # get the next square's northwest corner by moving east (90º) by the number of columns from the row's northwest
-          square_north_west = square_north_west.endpoint(90, config.square_size, units: :meters)
+          square_north_west = square.north_east
         end
         # increment row_north_west by square_size, southwards, ready for the next iteration
         row_north_west = row_north_west.endpoint(180, config.square_size, units: :meters)

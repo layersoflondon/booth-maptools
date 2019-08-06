@@ -30,14 +30,16 @@ module LayersOfLondon::Booth::MapTool
 
     def coordinates
       squares = LayersOfLondon::Booth::MapTool::Square.all
-      square_data = squares.inject({}) do |hash, square|
-        hash[square.id] = [
-          square.north_west.to_a,
-          square.south_east.to_a
-        ]
-        hash
+      square_data = squares.collect do |square|
+        {
+          id: square.id,
+          nw: square.north_west.to_a,
+          se: square.south_east.to_a
+        }
       end
+
       render json: square_data
+
     end
 
     def polygons
@@ -69,7 +71,7 @@ module LayersOfLondon::Booth::MapTool
 
     def show
       square = LayersOfLondon::Booth::MapTool::Square.find(params[:id]) rescue LayersOfLondon::Booth::MapTool::Square.create
-      render json: square.to_json
+      render json: square.to_json(padding: 20)
     end
   end
 end

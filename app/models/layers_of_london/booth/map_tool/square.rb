@@ -1,3 +1,4 @@
+require 'cmath'
 module LayersOfLondon::Booth::MapTool
   class Square < ApplicationRecord
     has_many :polygons, dependent: :destroy
@@ -64,23 +65,38 @@ module LayersOfLondon::Booth::MapTool
       down + across
     end
 
-    def to_json
-      {id: id, state: {label: aasm_state, description: aasm_state.humanize}}
+    def to_json(padding: 0)
+      {id: id, state: {label: aasm_state, description: aasm_state.humanize}, geojson: to_geojson(padding: padding)}
     end
 
-    def to_geojson
+    def to_geojson(padding: 0)
+      distance_diagonally = CMath.sqrt((padding * padding) + (padding * padding))
+      north_west_padded = padding.zero? ? north_west : north_west.endpoint(315,distance_diagonally, units: :meters)
+      north_east_padded = padding.zero? ? north_east : north_east.endpoint(45,distance_diagonally, units: :meters)
+      south_east_padded = padding.zero? ? south_east : south_east.endpoint(135,distance_diagonally, units: :meters)
+      south_west_padded = padding.zero? ? south_west : south_west.endpoint(225,distance_diagonally, units: :meters)
       {
         type: "Feature",
         geometry: {
-          type: "Polygon",
+          type: "MultiPolygon",
           coordinates: [
             [
-              north_west.to_a.reverse,
-              south_west.to_a.reverse,
-              south_east.to_a.reverse,
-              north_east.to_a.reverse,
-              north_west.to_a.reverse
+              [
+                north_west_padded.to_a.reverse,
+                south_west_padded.to_a.reverse,
+                south_east_padded.to_a.reverse,
+                north_east_padded.to_a.reverse,
+                north_west_padded.to_a.reverse
+              ],
+              [
+                LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
+                LayersOfLondon::Booth::MapTool.configuration.north_east.to_a.reverse,
+                LayersOfLondon::Booth::MapTool.configuration.south_east.to_a.reverse,
+                LayersOfLondon::Booth::MapTool.configuration.south_west.to_a.reverse,
+                LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
+              ]
             ]
+
           ]
         },
         properties: {
