@@ -6,9 +6,10 @@ module LayersOfLondon::Booth::MapTool
     serialize :feature, JSON
 
     def to_json(user_can_edit: false)
-      feature.inject({}) do |hash, (k,v)|
+      json_feature = {'properties' => {}}.merge(feature)
+      json_feature.inject({}) do |hash, (k,v)|
         if k === 'properties'
-          v.merge!({'id' => id, 'userCanEdit': user_can_edit, square: square.try(:to_json)})
+          v.merge!({'id' => id, 'userCanEdit': user_can_edit, 'square' => square.try(:to_json)})
         end
 
         hash[k] = v
