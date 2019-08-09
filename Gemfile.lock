@@ -3,6 +3,7 @@ PATH
   specs:
     layers_of_london-booth-map_tool (0.1.0)
       aasm (~> 5.0)
+      geokit
       pundit (~> 2.0)
       rails (~> 5.2)
 
@@ -57,6 +58,7 @@ GEM
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     erubi (1.8.0)
+    geokit (1.13.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.6.0)
@@ -97,7 +99,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.4)
+    rails-html-sanitizer (1.2.0)
       loofah (~> 2.2, >= 2.2.2)
     railties (5.2.3)
       actionpack (= 5.2.3)

@@ -61,7 +61,9 @@ module LayersOfLondon::Booth::MapTool
       proposed_state = params[:state]
 
       if square.send("may_mark_as_#{proposed_state}?")
-        square.send("mark_as_#{proposed_state}!")
+        square.send("mark_as_#{proposed_state}")
+        square.user = current_user if square.aasm_state === "done"
+        square.save
 
         render json: square.to_json
       else

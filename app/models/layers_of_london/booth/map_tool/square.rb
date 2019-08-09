@@ -3,6 +3,7 @@ module LayersOfLondon::Booth::MapTool
   class Square < ApplicationRecord
     has_many :polygons, dependent: :destroy
 
+    belongs_to :user, optional: true
 
 
     validates_presence_of :north_west_lat, :north_west_lng, :south_east_lat, :south_east_lng, :square_size
@@ -23,6 +24,7 @@ module LayersOfLondon::Booth::MapTool
       state :not_started, initial: true
       state :in_progress
       state :done
+      state :verified
       state :flagged
 
       event :mark_as_in_progress do
@@ -33,12 +35,16 @@ module LayersOfLondon::Booth::MapTool
         transitions from: [:in_progress, :flagged], to: :done
       end
 
+      event :mark_as_verified do
+        transitions from: [:done], to: :verified
+      end
+
       event :mark_as_flagged do
-        transitions from: [:in_progress, :done], to: :flagged
+        transitions from: [:in_progress, :done, :flagged], to: :flagged
       end
 
       event :mark_as_back_in_progress do
-        transitions from: [:flagged, :done], to: :in_progress
+        transitions from: [:flagged, :done, :verified], to: :in_progress
       end
     end
 
@@ -66,7 +72,12 @@ module LayersOfLondon::Booth::MapTool
     end
 
     def to_json(padding: 0)
-      {id: id, state: {label: aasm_state, description: aasm_state.humanize}, geojson: to_geojson(padding: padding)}
+      # {id: id, state: {label: aasm_state, description: aasm_state.humanize}, geojson: to_geojson(padding: padding)}
+      #
+      state = {label: aasm_state, description: aasm_state.humanize}
+      state.merge!({user: {id: user.id}}) if aasm_state === "done"
+
+      {id: id, geojson: to_geojson(padding: padding)}.merge({state: state})
     end
 
     def to_geojson(padding: 0)
@@ -128,7 +139,7 @@ module LayersOfLondon::Booth::MapTool
     end
 
     def editable?
-      !aasm_state.in?(["done", "flagged"])
+      !aasm_state.in?(["done", "flagged", "verified"])
     end
 
   end

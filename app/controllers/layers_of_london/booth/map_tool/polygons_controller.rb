@@ -3,7 +3,11 @@ require_dependency "layers_of_london/booth/map_tool/application_controller"
 module LayersOfLondon::Booth::MapTool
   class PolygonsController < ApplicationController
     def index
-      features = LayersOfLondon::Booth::MapTool::Polygon.all.collect(&:to_json)
+      skip_authorization
+      features = LayersOfLondon::Booth::MapTool::Polygon.all.collect do |poly|
+        user_can_edit = LayersOfLondon::Booth::MapTool::PolygonPolicy.new(current_user, poly).update?
+        poly.to_json(user_can_edit: user_can_edit)
+      end
 
       feature = {
         type: "FeatureCollection",
