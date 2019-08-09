@@ -12,14 +12,15 @@ module MapTool
       squares_y.times do |row|
         puts "Creating row #{row}"
           square_north_west = row_north_west
+        square = nil
         squares_x.times do |col|
           puts "\tCreating column #{col}"
-          square = LayersOfLondon::Booth::MapTool::Square.create(north_west_lat: square_north_west.lat, north_west_lng: square_north_west.lng)
+          square = LayersOfLondon::Booth::MapTool::Square.create(north_west_lat: square_north_west.lat, north_west_lng: square_north_west.lng, row: row, col: col)
           # get the next square's northwest corner by moving east (90º) by the number of columns from the row's northwest
           square_north_west = square.north_east
         end
         # increment row_north_west by square_size, southwards, ready for the next iteration
-        row_north_west = row_north_west.endpoint(180, config.square_size, units: :meters)
+        row_north_west = LayersOfLondon::Booth::MapTool::Square.find_by(row: row, col: 0).south_west
       end
 
     end
