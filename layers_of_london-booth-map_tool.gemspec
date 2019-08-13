@@ -8,10 +8,10 @@ Gem::Specification.new do |spec|
   spec.name        = "layers_of_london-booth-map_tool"
   spec.version     = LayersOfLondon::Booth::MapTool::VERSION
   spec.authors     = ["Paul Hendrick"]
-  spec.email       = ["paul@errorstudio.co.uk"]
+  spec.email       = ["paul@error.agency"]
   spec.homepage    = "https://layersoflondon.org"
-  spec.summary     = "Booth poverty map tool for Layers Of London"
-  spec.description = "Booth poverty map tool for Layers Of London"
+  spec.summary     = "Booth poverty map tool API for Layers Of London"
+  spec.description = "Booth poverty map tool API for Layers Of London"
   spec.license     = "GPL-3.0"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
