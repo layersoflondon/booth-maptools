@@ -89,24 +89,24 @@ module LayersOfLondon::Booth::MapTool
       {
         type: "Feature",
         geometry: {
-          type: "MultiPolygon",
+          type: "Polygon",
           coordinates: [
-            [
+            # [
               [
-                north_west_padded.to_a.reverse,
-                south_west_padded.to_a.reverse,
-                south_east_padded.to_a.reverse,
-                north_east_padded.to_a.reverse,
-                north_west_padded.to_a.reverse
-              ],
-              [
-                LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
-                LayersOfLondon::Booth::MapTool.configuration.north_east.to_a.reverse,
-                LayersOfLondon::Booth::MapTool.configuration.south_east.to_a.reverse,
-                LayersOfLondon::Booth::MapTool.configuration.south_west.to_a.reverse,
-                LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
-              ]
-            ]
+                north_west.to_a.reverse,
+                south_west.to_a.reverse,
+                south_east.to_a.reverse,
+                north_east.to_a.reverse,
+                north_west.to_a.reverse
+              ]#,
+            #   [
+            #     LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
+            #     LayersOfLondon::Booth::MapTool.configuration.north_east.to_a.reverse,
+            #     LayersOfLondon::Booth::MapTool.configuration.south_east.to_a.reverse,
+            #     LayersOfLondon::Booth::MapTool.configuration.south_west.to_a.reverse,
+            #     LayersOfLondon::Booth::MapTool.configuration.north_west.to_a.reverse,
+            #   ]
+            # ]
 
           ]
         },

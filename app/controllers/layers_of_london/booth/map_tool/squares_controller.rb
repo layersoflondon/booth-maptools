@@ -5,7 +5,7 @@ module LayersOfLondon::Booth::MapTool
     skip_after_action :verify_authorized rescue nil
 
     def index
-      squares = LayersOfLondon::Booth::MapTool::Square.where.not(aasm_state: :not_started)
+      squares = LayersOfLondon::Booth::MapTool::Square.all
       render json: {
         type: "FeatureCollection",
         features: squares.collect(&:to_geojson)
