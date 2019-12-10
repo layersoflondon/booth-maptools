@@ -43,10 +43,7 @@ module LayersOfLondon::Booth::MapTool
     end
 
     def polygons
-      features = LayersOfLondon::Booth::MapTool::Polygon.all.collect do |polygon|
-        user_can_edit = LayersOfLondon::Booth::MapTool::PolygonPolicy.new(current_user, polygon).update?
-        polygon.to_json(user_can_edit: user_can_edit)
-      end
+      features = LayersOfLondon::Booth::MapTool::PolygonPolicy::Scope.new(current_user, LayersOfLondon::Booth::MapTool::Polygon).resolve
 
       feature_collection = {
         type: "FeatureCollection",
