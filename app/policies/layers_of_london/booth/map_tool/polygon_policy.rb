@@ -5,7 +5,7 @@ module LayersOfLondon::Booth::MapTool
     end
 
     def update?
-      user.present? && record.user.try(:id) === user.try(:id) && record.square.editable?
+      user.present? && record.square.editable?
     end
 
     def destroy?
